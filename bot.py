@@ -3,6 +3,11 @@ from config import token # импорт токена
 
 bot = telebot.TeleBot(token) 
 
+@bot.message_handler(content_types=['new_chat_members'])
+def make_some(message):
+    bot.send_message(message.chat.id, 'I accepted a new user!')
+    bot.approve_chat_join_request(message.chat.id, message.from_user.id)
+
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.reply_to(message, "Привет! Я бот для управления чатом.")
@@ -18,7 +23,7 @@ def ban_user(message):
         if user_status == 'administrator' or user_status == 'creator':
             bot.reply_to(message, "Невозможно забанить администратора.")
         else:
-            bot.ban_chat_member(chat_id, user_id) # пользователь с user_id будет забанен в чате с chat_id
+            bot.ban_chat_member(chat_id, user_id) # пользователь с user_id будет з
             bot.reply_to(message, f"Пользователь @{message.reply_to_message.from_user.username} был забанен.")
     else:
         bot.reply_to(message, "Эта команда должна быть использована в ответ на сообщение пользователя, которого вы хотите забанить.")
